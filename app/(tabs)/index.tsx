@@ -1,6 +1,6 @@
 // ホーム画面 - カメラ・マイク学習アプリのメイン画面
 import { Image } from 'expo-image';
-import { StyleSheet, Pressable } from 'react-native';
+import { StyleSheet, Pressable, View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { HelloWave } from '@/components/hello-wave';
@@ -8,12 +8,9 @@ import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const colorScheme = useColorScheme();
 
   return (
     <ParallaxScrollView
@@ -44,36 +41,28 @@ export default function HomeScreen() {
 
       {/* カメラ機能へのリンクボタン */}
       <Pressable
-        style={({ pressed }) => [
-          styles.menuButton,
-          { backgroundColor: Colors[colorScheme ?? 'light'].tint },
-          pressed && styles.menuButtonPressed,
-        ]}
+        className="flex-row items-center gap-4 p-5 rounded-xl mb-3 bg-[#0a7ea4] active:opacity-80"
         onPress={() => router.push('/camera')}>
         <IconSymbol name="camera.fill" size={32} color="#fff" />
-        <ThemedView style={styles.menuButtonTextContainer}>
-          <ThemedText style={styles.menuButtonTitle}>カメラ</ThemedText>
-          <ThemedText style={styles.menuButtonDescription}>
+        <View className="flex-1">
+          <Text className="text-white text-xl font-semibold">カメラ</Text>
+          <Text className="text-white/80 text-sm mt-1">
             写真を撮影する
-          </ThemedText>
-        </ThemedView>
+          </Text>
+        </View>
       </Pressable>
 
       {/* マイク機能へのリンクボタン */}
       <Pressable
-        style={({ pressed }) => [
-          styles.menuButton,
-          { backgroundColor: '#4CAF50' },
-          pressed && styles.menuButtonPressed,
-        ]}
+        className="flex-row items-center gap-4 p-5 rounded-xl mb-3 bg-[#4CAF50] active:opacity-80"
         onPress={() => router.push('/microphone')}>
         <IconSymbol name="mic.fill" size={32} color="#fff" />
-        <ThemedView style={styles.menuButtonTextContainer}>
-          <ThemedText style={styles.menuButtonTitle}>マイク</ThemedText>
-          <ThemedText style={styles.menuButtonDescription}>
+        <View className="flex-1">
+          <Text className="text-white text-xl font-semibold">マイク</Text>
+          <Text className="text-white/80 text-sm mt-1">
             音声を録音・再生する
-          </ThemedText>
-        </ThemedView>
+          </Text>
+        </View>
       </Pressable>
     </ParallaxScrollView>
   );
@@ -91,30 +80,6 @@ const styles = StyleSheet.create({
   },
   menuTitle: {
     marginBottom: 16,
-  },
-  menuButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 12,
-  },
-  menuButtonPressed: {
-    opacity: 0.8,
-  },
-  menuButtonTextContainer: {
-    backgroundColor: 'transparent',
-  },
-  menuButtonTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: '600',
-  },
-  menuButtonDescription: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: 14,
-    marginTop: 4,
   },
   reactLogo: {
     height: 178,

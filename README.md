@@ -20,6 +20,7 @@ iPhoneのネイティブ機能（カメラ、マイク）の使い方を学ぶ�
 | [expo-image-picker](https://docs.expo.dev/versions/latest/sdk/imagepicker/) | カメラ撮影 |
 | [expo-av](https://docs.expo.dev/versions/latest/sdk/av/) | 録音・再生 |
 | [expo-router](https://docs.expo.dev/router/introduction/) | ファイルベースルーティング |
+| [NativeWind](https://www.nativewind.dev/) | Tailwind CSSスタイリング |
 
 ## セットアップ
 
@@ -52,7 +53,12 @@ app/(tabs)/
 - Expo Go (iOS)
 - Expo SDK 54
 
+## ドキュメント
+
+- [NativeWindとStyleSheetの競合について](docs/nativewind-stylesheet-conflict.md)
+
 ## 注意事項
 
 - カメラとマイクの使用には権限の許可が必要です
 - 実機（iPhone）での動作確認を推奨します
+- NativeWind導入後は`className`でスタイリングすることを推奨
