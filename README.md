@@ -56,6 +56,7 @@ app/(tabs)/
 ## ドキュメント
 
 - [NativeWindとStyleSheetの競合について](docs/nativewind-stylesheet-conflict.md)
+- [Expo Goとサーバー接続について](docs/expo-go-server-connection.md)
 
 ## 注意事項
 
