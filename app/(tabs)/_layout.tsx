@@ -38,6 +38,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="storage"
+        options={{
+          title: 'ストレージ',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="externaldrive.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',

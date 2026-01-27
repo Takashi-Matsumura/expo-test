@@ -64,6 +64,19 @@ export default function HomeScreen() {
           </Text>
         </View>
       </Pressable>
+
+      {/* ストレージ機能へのリンクボタン */}
+      <Pressable
+        className="flex-row items-center gap-4 p-5 rounded-xl mb-3 bg-[#9C27B0] active:opacity-80"
+        onPress={() => router.push('/storage')}>
+        <IconSymbol name="externaldrive.fill" size={32} color="#fff" />
+        <View className="flex-1">
+          <Text className="text-white text-xl font-semibold">ストレージ</Text>
+          <Text className="text-white/80 text-sm mt-1">
+            データ保存・認証付き機密保存
+          </Text>
+        </View>
+      </Pressable>
     </ParallaxScrollView>
   );
 }

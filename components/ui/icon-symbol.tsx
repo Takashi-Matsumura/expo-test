@@ -21,6 +21,10 @@ const MAPPING = {
   // カメラ・マイク機能用のアイコン
   'camera.fill': 'photo-camera',
   'mic.fill': 'mic',
+  // ストレージ・認証機能用のアイコン
+  'externaldrive.fill': 'storage',
+  'faceid': 'fingerprint',
+  'trash.fill': 'delete',
 } as IconMapping;
 
 /**
