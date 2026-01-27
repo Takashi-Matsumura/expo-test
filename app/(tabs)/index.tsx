@@ -1,13 +1,20 @@
+// ホーム画面 - カメラ・マイク学習アプリのメイン画面
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { IconSymbol } from '@/components/ui/icon-symbol';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const colorScheme = useColorScheme();
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -17,63 +24,57 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }>
+      {/* ウェルカムメッセージ */}
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">ようこそ！</ThemedText>
         <HelloWave />
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
 
+      {/* アプリの説明 */}
+      <ThemedView style={styles.descriptionContainer}>
         <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
+          このアプリでは、iPhoneのネイティブ機能の使い方を学ぶことができます。
         </ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+
+      {/* 機能選択メニュー */}
+      <ThemedText type="subtitle" style={styles.menuTitle}>
+        機能を選んでください
+      </ThemedText>
+
+      {/* カメラ機能へのリンクボタン */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.menuButton,
+          { backgroundColor: Colors[colorScheme ?? 'light'].tint },
+          pressed && styles.menuButtonPressed,
+        ]}
+        onPress={() => router.push('/camera')}>
+        <IconSymbol name="camera.fill" size={32} color="#fff" />
+        <ThemedView style={styles.menuButtonTextContainer}>
+          <ThemedText style={styles.menuButtonTitle}>カメラ</ThemedText>
+          <ThemedText style={styles.menuButtonDescription}>
+            写真を撮影する
+          </ThemedText>
+        </ThemedView>
+      </Pressable>
+
+      {/* マイク機能へのリンクボタン */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.menuButton,
+          { backgroundColor: '#4CAF50' },
+          pressed && styles.menuButtonPressed,
+        ]}
+        onPress={() => router.push('/microphone')}>
+        <IconSymbol name="mic.fill" size={32} color="#fff" />
+        <ThemedView style={styles.menuButtonTextContainer}>
+          <ThemedText style={styles.menuButtonTitle}>マイク</ThemedText>
+          <ThemedText style={styles.menuButtonDescription}>
+            音声を録音・再生する
+          </ThemedText>
+        </ThemedView>
+      </Pressable>
     </ParallaxScrollView>
   );
 }
@@ -84,9 +85,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  descriptionContainer: {
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  menuTitle: {
+    marginBottom: 16,
+  },
+  menuButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    padding: 20,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  menuButtonPressed: {
+    opacity: 0.8,
+  },
+  menuButtonTextContainer: {
+    backgroundColor: 'transparent',
+  },
+  menuButtonTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  menuButtonDescription: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: 14,
+    marginTop: 4,
   },
   reactLogo: {
     height: 178,

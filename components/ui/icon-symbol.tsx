@@ -18,6 +18,9 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  // カメラ・マイク機能用のアイコン
+  'camera.fill': 'photo-camera',
+  'mic.fill': 'mic',
 } as IconMapping;
 
 /**

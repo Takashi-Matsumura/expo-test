@@ -1,50 +1,58 @@
-# Welcome to your Expo app 👋
+# カメラ・マイク学習アプリ
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+iPhoneのネイティブ機能（カメラ、マイク）の使い方を学ぶためのサンプルアプリです。
 
-## Get started
+## 機能
 
-1. Install dependencies
+### カメラ
+- カメラを起動して写真を撮影
+- 撮影した写真を画面に表示
+
+### マイク
+- 音声を録音
+- 録音した音声を再生
+
+## 使用技術
+
+| パッケージ | 用途 |
+|-----------|------|
+| [Expo](https://expo.dev) | React Nativeフレームワーク |
+| [expo-image-picker](https://docs.expo.dev/versions/latest/sdk/imagepicker/) | カメラ撮影 |
+| [expo-av](https://docs.expo.dev/versions/latest/sdk/av/) | 録音・再生 |
+| [expo-router](https://docs.expo.dev/router/introduction/) | ファイルベースルーティング |
+
+## セットアップ
+
+1. 依存関係をインストール
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. アプリを起動
 
    ```bash
-   npx expo start
+   npx expo start --tunnel
    ```
 
-In the output, you'll find options to open the app in a
+3. [Expo Go](https://expo.dev/go)アプリでQRコードをスキャン
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## ファイル構成
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+app/(tabs)/
+  _layout.tsx      # タブナビゲーション設定
+  index.tsx        # ホーム画面
+  camera.tsx       # カメラ機能
+  microphone.tsx   # マイク機能
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 動作確認環境
 
-## Learn more
+- Expo Go (iOS)
+- Expo SDK 54
 
-To learn more about developing your project with Expo, look at the following resources:
+## 注意事項
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- カメラとマイクの使用には権限の許可が必要です
+- 実機（iPhone）での動作確認を推奨します
