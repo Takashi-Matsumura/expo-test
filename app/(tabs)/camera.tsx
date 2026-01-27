@@ -1,17 +1,12 @@
 // カメラ画面 - expo-image-pickerを使用した写真撮影機能
 import { useState } from 'react';
-import { StyleSheet, Pressable, Alert } from 'react-native';
+import { Pressable, Alert, View, Text } from 'react-native';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function CameraScreen() {
-  const colorScheme = useColorScheme();
   // 撮影した写真のURIを保存するstate
   const [photoUri, setPhotoUri] = useState<string | null>(null);
 
@@ -45,102 +40,40 @@ export default function CameraScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <View className="flex-1 p-5 pt-16 bg-white dark:bg-gray-900">
       {/* 画面タイトル */}
-      <ThemedText type="title" style={styles.title}>
+      <Text className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">
         カメラ
-      </ThemedText>
+      </Text>
 
       {/* 説明テキスト */}
-      <ThemedText style={styles.description}>
+      <Text className="mb-6 text-gray-500 dark:text-gray-400">
         ボタンを押してカメラで写真を撮影できます。
-      </ThemedText>
+      </Text>
 
       {/* 写真表示エリア */}
-      <ThemedView style={styles.photoContainer}>
+      <View className="flex-1 rounded-xl overflow-hidden mb-6">
         {photoUri ? (
           // 写真がある場合は表示
-          <Image source={{ uri: photoUri }} style={styles.photo} contentFit="cover" />
+          <Image source={{ uri: photoUri }} className="w-full h-full" contentFit="cover" />
         ) : (
           // 写真がない場合はプレースホルダー
-          <ThemedView style={styles.placeholder}>
-            <IconSymbol
-              name="camera.fill"
-              size={64}
-              color={Colors[colorScheme ?? 'light'].icon}
-            />
-            <ThemedText style={styles.placeholderText}>
+          <View className="flex-1 justify-center items-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
+            <IconSymbol name="camera.fill" size={64} color="#9ca3af" />
+            <Text className="mt-4 text-gray-400 dark:text-gray-500">
               まだ写真がありません
-            </ThemedText>
-          </ThemedView>
+            </Text>
+          </View>
         )}
-      </ThemedView>
+      </View>
 
       {/* 撮影ボタン */}
       <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          { backgroundColor: Colors[colorScheme ?? 'light'].tint },
-          pressed && styles.buttonPressed,
-        ]}
+        className="flex-row items-center justify-center gap-2 p-4 rounded-xl bg-[#0a7ea4] active:opacity-80"
         onPress={takePhoto}>
         <IconSymbol name="camera.fill" size={24} color="#fff" />
-        <ThemedText style={styles.buttonText}>写真を撮影</ThemedText>
+        <Text className="text-white text-lg font-semibold">写真を撮影</Text>
       </Pressable>
-    </ThemedView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    paddingTop: 60,
-  },
-  title: {
-    marginBottom: 8,
-  },
-  description: {
-    marginBottom: 24,
-    opacity: 0.7,
-  },
-  photoContainer: {
-    flex: 1,
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginBottom: 24,
-  },
-  photo: {
-    width: '100%',
-    height: '100%',
-  },
-  placeholder: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    borderColor: '#ccc',
-    borderRadius: 12,
-  },
-  placeholderText: {
-    marginTop: 16,
-    opacity: 0.5,
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    padding: 16,
-    borderRadius: 12,
-  },
-  buttonPressed: {
-    opacity: 0.8,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-});

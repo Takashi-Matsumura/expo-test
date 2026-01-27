@@ -1,16 +1,11 @@
 // マイク画面 - expo-avを使用した録音・再生機能
 import { useState, useRef } from 'react';
-import { StyleSheet, Pressable, Alert } from 'react-native';
+import { Pressable, Alert, View, Text } from 'react-native';
 import { Audio } from 'expo-av';
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function MicrophoneScreen() {
-  const colorScheme = useColorScheme();
   // 録音中かどうかを管理するstate
   const [isRecording, setIsRecording] = useState(false);
   // 録音データがあるかどうか
@@ -115,137 +110,63 @@ export default function MicrophoneScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <View className="flex-1 p-5 pt-16 bg-white dark:bg-gray-900">
       {/* 画面タイトル */}
-      <ThemedText type="title" style={styles.title}>
+      <Text className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">
         マイク
-      </ThemedText>
+      </Text>
 
       {/* 説明テキスト */}
-      <ThemedText style={styles.description}>
+      <Text className="mb-6 text-gray-500 dark:text-gray-400">
         音声を録音して再生できます。
-      </ThemedText>
+      </Text>
 
       {/* 録音状態の表示 */}
-      <ThemedView style={styles.statusContainer}>
-        <ThemedView
-          style={[
-            styles.statusIndicator,
-            { backgroundColor: isRecording ? '#ff4444' : '#666' },
-          ]}
+      <View className="flex-row items-center justify-center gap-2 mb-6">
+        <View
+          className={`w-3 h-3 rounded-full ${
+            isRecording ? 'bg-red-500' : 'bg-gray-500'
+          }`}
         />
-        <ThemedText style={styles.statusText}>
-          {isRecording
-            ? '録音中...'
-            : hasRecording
-            ? '録音完了'
-            : '待機中'}
-        </ThemedText>
-      </ThemedView>
+        <Text className="text-base text-gray-700 dark:text-gray-300">
+          {isRecording ? '録音中...' : hasRecording ? '録音完了' : '待機中'}
+        </Text>
+      </View>
 
       {/* マイクアイコン */}
-      <ThemedView style={styles.iconContainer}>
+      <View className="flex-1 justify-center items-center">
         <IconSymbol
           name="mic.fill"
           size={100}
-          color={
-            isRecording
-              ? '#ff4444'
-              : Colors[colorScheme ?? 'light'].icon
-          }
+          color={isRecording ? '#ef4444' : '#9ca3af'}
         />
-      </ThemedView>
+      </View>
 
       {/* ボタンエリア */}
-      <ThemedView style={styles.buttonContainer}>
+      <View className="gap-3">
         {/* 録音開始/停止ボタン */}
         <Pressable
-          style={({ pressed }) => [
-            styles.button,
-            {
-              backgroundColor: isRecording
-                ? '#ff4444'
-                : Colors[colorScheme ?? 'light'].tint,
-            },
-            pressed && styles.buttonPressed,
-          ]}
+          className={`items-center justify-center p-4 rounded-xl active:opacity-80 ${
+            isRecording ? 'bg-red-500' : 'bg-[#0a7ea4]'
+          }`}
           onPress={isRecording ? stopRecording : startRecording}>
-          <ThemedText style={styles.buttonText}>
+          <Text className="text-white text-lg font-semibold">
             {isRecording ? '録音停止' : '録音開始'}
-          </ThemedText>
+          </Text>
         </Pressable>
 
         {/* 再生ボタン（録音がある場合のみ表示） */}
         {hasRecording && (
           <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              styles.playButton,
-              pressed && styles.buttonPressed,
-            ]}
+            className="items-center justify-center p-4 rounded-xl bg-green-500 active:opacity-80 disabled:opacity-50"
             onPress={playRecording}
             disabled={isPlaying || isRecording}>
-            <ThemedText style={styles.buttonText}>
+            <Text className="text-white text-lg font-semibold">
               {isPlaying ? '再生中...' : '再生'}
-            </ThemedText>
+            </Text>
           </Pressable>
         )}
-      </ThemedView>
-    </ThemedView>
+      </View>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    paddingTop: 60,
-  },
-  title: {
-    marginBottom: 8,
-  },
-  description: {
-    marginBottom: 24,
-    opacity: 0.7,
-  },
-  statusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginBottom: 24,
-  },
-  statusIndicator: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-  },
-  statusText: {
-    fontSize: 16,
-  },
-  iconContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    gap: 12,
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-    borderRadius: 12,
-  },
-  buttonPressed: {
-    opacity: 0.8,
-  },
-  playButton: {
-    backgroundColor: '#4CAF50',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-});
