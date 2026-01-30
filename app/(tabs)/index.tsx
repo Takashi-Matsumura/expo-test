@@ -1,6 +1,7 @@
 // ホーム画面 - カメラ・マイク学習アプリのメイン画面
 import { Image } from 'expo-image';
-import { StyleSheet, Pressable, View, Text } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Pressable, View, Text, ActivityIndicator, NativeModules } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { HelloWave } from '@/components/hello-wave';
@@ -11,6 +12,19 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const [nfcSupported, setNfcSupported] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    // ネイティブモジュールが存在するか確認（Expo Goでは存在しない）
+    if (!NativeModules.NfcManager) {
+      setNfcSupported(false);
+      return;
+    }
+    const NfcManager = require('react-native-nfc-manager').default;
+    NfcManager.isSupported()
+      .then(setNfcSupported)
+      .catch(() => setNfcSupported(false));
+  }, []);
 
   return (
     <ParallaxScrollView
@@ -77,6 +91,35 @@ export default function HomeScreen() {
           </Text>
         </View>
       </Pressable>
+
+      {/* デバイス情報 */}
+      <ThemedText type="subtitle" className="mt-6 mb-4">
+        デバイス情報
+      </ThemedText>
+
+      <View
+        className={`flex-row items-center gap-4 p-5 rounded-xl ${
+          nfcSupported === null
+            ? 'bg-gray-400'
+            : nfcSupported
+              ? 'bg-[#2E7D32]'
+              : 'bg-gray-500'
+        }`}>
+        <IconSymbol name="wave.3.right" size={32} color="#fff" />
+        <View className="flex-1">
+          <Text className="text-white text-xl font-semibold">NFC</Text>
+          {nfcSupported === null ? (
+            <View className="flex-row items-center gap-2 mt-1">
+              <ActivityIndicator size="small" color="#fff" />
+              <Text className="text-white/80 text-sm">確認中...</Text>
+            </View>
+          ) : (
+            <Text className="text-white/80 text-sm mt-1">
+              {nfcSupported ? '対応しています' : '非対応です'}
+            </Text>
+          )}
+        </View>
+      </View>
     </ParallaxScrollView>
   );
 }

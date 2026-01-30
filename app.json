@@ -12,7 +12,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSFaceIDUsageDescription": "セキュアなデータにアクセスするためにFace IDを使用します"
-      }
+      },
+      "bundleIdentifier": "com.matsbaccano.expotest"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +23,13 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.NFC"
+      ],
+      "package": "com.matsbaccano.expotest"
     },
     "web": {
       "output": "static",
@@ -47,6 +54,12 @@
         "expo-local-authentication",
         {
           "faceIDPermission": "セキュアなデータにアクセスするためにFace IDを使用します"
+        }
+      ],
+      [
+        "react-native-nfc-manager",
+        {
+          "nfcPermission": "NFC機能を使用してデバイスの対応状況を確認します"
         }
       ]
     ],
