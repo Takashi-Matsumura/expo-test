@@ -162,11 +162,27 @@ npx expo start --dev-client
 | NFC カードリーダー | 開発ビルド | `react-native-nfc-manager` はネイティブモジュール |
 | 生体認証（一部設定） | 開発ビルド | `disableDeviceFallback` 等の設定が必要 |
 
+## Expo Goでのネイティブモジュールの扱い
+
+ネイティブモジュール（`react-native-nfc-manager`等）をトップレベルで `import` すると、Expo Goで起動時エラーになる。
+対策として、`NativeModules` でモジュールの存在を確認してから動的に読み込む：
+
+```typescript
+import { NativeModules } from 'react-native';
+
+// Expo Goではネイティブモジュールが存在しないため、動的に読み込む
+const hasNfc = !!NativeModules.NfcManager;
+const NfcManager = hasNfc ? require('react-native-nfc-manager').default : null;
+const NfcTech = hasNfc ? require('react-native-nfc-manager').NfcTech : {};
+```
+
+これにより、Expo Goでもクラッシュせず「NFCモジュールが利用できません」と画面上に表示される。
+
 ## トラブルシューティング
 
 ### 「NFCモジュールが利用できません」
 
-Expo Goで実行している。開発ビルドが必要。
+Expo Goで実行している。開発ビルドが必要。画面上の案内表示であり、エラーではない。
 
 ### 「No script URL provided」
 

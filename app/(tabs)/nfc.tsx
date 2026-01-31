@@ -1,9 +1,13 @@
 // NFC画面 - FeliCaカードリーダー
 import { useState, useCallback, useEffect } from 'react';
-import { View, Text, Pressable, Alert, ScrollView } from 'react-native';
-import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import { View, Text, Pressable, Alert, ScrollView, NativeModules } from 'react-native';
 
 import { IconSymbol } from '@/components/ui/icon-symbol';
+
+// Expo Goではネイティブモジュールが存在しないため、動的に読み込む
+const hasNfc = !!NativeModules.NfcManager;
+const NfcManager = hasNfc ? require('react-native-nfc-manager').default : null;
+const NfcTech = hasNfc ? require('react-native-nfc-manager').NfcTech : {};
 
 // システムコードの説明
 function getSystemCodeLabel(code: string): string {
@@ -32,6 +36,11 @@ export default function NfcScreen() {
 
   // NFCマネージャーの初期化
   useEffect(() => {
+    if (!hasNfc) {
+      setError('NFCモジュールが利用できません。開発ビルド（Xcode）で実行してください。');
+      return;
+    }
+
     async function init() {
       try {
         const supported = await NfcManager.isSupported();
@@ -48,7 +57,7 @@ export default function NfcScreen() {
     init();
 
     return () => {
-      NfcManager.cancelTechnologyRequest().catch(() => {});
+      NfcManager?.cancelTechnologyRequest().catch(() => {});
     };
   }, []);
 
@@ -89,7 +98,7 @@ export default function NfcScreen() {
         setError(msg);
       }
     } finally {
-      NfcManager.cancelTechnologyRequest().catch(() => {});
+      NfcManager?.cancelTechnologyRequest().catch(() => {});
       setScanning(false);
     }
   }, [nfcReady]);
