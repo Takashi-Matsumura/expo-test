@@ -97,17 +97,21 @@ export default function HomeScreen() {
         デバイス情報
       </ThemedText>
 
-      <View
+      <Pressable
         className={`flex-row items-center gap-4 p-5 rounded-xl ${
           nfcSupported === null
             ? 'bg-gray-400'
             : nfcSupported
-              ? 'bg-[#2E7D32]'
+              ? 'bg-[#FF6D00] active:opacity-80'
               : 'bg-gray-500'
-        }`}>
+        }`}
+        onPress={() => {
+          if (nfcSupported) router.push('/nfc');
+        }}
+        disabled={!nfcSupported}>
         <IconSymbol name="wave.3.right" size={32} color="#fff" />
         <View className="flex-1">
-          <Text className="text-white text-xl font-semibold">NFC</Text>
+          <Text className="text-white text-xl font-semibold">NFC カードリーダー</Text>
           {nfcSupported === null ? (
             <View className="flex-row items-center gap-2 mt-1">
               <ActivityIndicator size="small" color="#fff" />
@@ -115,11 +119,11 @@ export default function HomeScreen() {
             </View>
           ) : (
             <Text className="text-white/80 text-sm mt-1">
-              {nfcSupported ? '対応しています' : '非対応です'}
+              {nfcSupported ? 'FeliCaカードを読み取る' : 'NFC非対応です'}
             </Text>
           )}
         </View>
-      </View>
+      </Pressable>
     </ParallaxScrollView>
   );
 }

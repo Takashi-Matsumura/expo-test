@@ -45,6 +45,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="nfc"
+        options={{
+          title: 'NFC',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="wave.3.right" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',

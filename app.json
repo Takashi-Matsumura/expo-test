@@ -59,7 +59,8 @@
       [
         "react-native-nfc-manager",
         {
-          "nfcPermission": "NFC機能を使用してデバイスの対応状況を確認します"
+          "nfcPermission": "NFCを使用してカードを読み取ります",
+          "systemCodes": ["0003", "88B4", "8005", "8008", "FE00", "12FC"]
         }
       ]
     ],

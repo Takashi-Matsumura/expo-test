@@ -118,10 +118,91 @@ npx eas-cli build --profile development --platform ios
 2. 「このコンピュータを信頼しますか？」で **「信頼」** をタップ
 3. **設定 > プライバシーとセキュリティ > デベロッパモード** を有効にする
 
+## FeliCaカードリーダー機能
+
+### 概要
+
+NFCタブ画面からFeliCaカードのIDm（製造ID）とシステムコードを読み取る機能。
+社員証などのFeliCaカードのIDmを取得し、社内アプリの認証基盤として利用できる。
+
+### 読み取れるデータ
+
+| データ | 説明 | 例 |
+|--------|------|-----|
+| IDm（製造ID） | カード固有の8バイト識別子。カードごとにユニーク | `1116020053187C01` |
+| システムコード | カードの種別を示すコード | `FE00`, `0003` |
+| 検出技術 | NFCの通信プロトコル | `felica`, `mifare` 等 |
+
+### システムコード一覧
+
+| コード | 種別 |
+|--------|------|
+| `0003` | 交通系IC（Suica, PASMO, ICOCA等） |
+| `88B4` | 交通系IC（独自領域） |
+| `8005` | FeliCa Standard |
+| `8008` | FeliCa Lite |
+| `FE00` | FeliCa Lite-S / NDEF |
+| `12FC` | PASPY等 |
+
+### 実機テスト結果
+
+以下の3種類のカードで読み取りを確認済み：
+
+| カード | IDm | システムコード | 種別 |
+|--------|-----|---------------|------|
+| 社員証 | `1116020053187C01` | `FE00` | FeliCa Lite-S / NDEF |
+| 交通系IC | `01010910811B8804` | `0003` | 交通系IC |
+| FeliCa Lite | `1110440097196407` | `FE00` | FeliCa Lite-S / NDEF |
+
+### app.json のシステムコード設定
+
+iOSでFeliCaを読み取るには、Info.plistに対象のシステムコードを登録する必要がある。
+`app.json`のプラグイン設定で指定する：
+
+```json
+["react-native-nfc-manager", {
+  "nfcPermission": "NFCを使用してカードを読み取ります",
+  "systemCodes": ["0003", "88B4", "8005", "8008", "FE00", "12FC"]
+}]
+```
+
+`systemCodes`に含まれないシステムコードのカードは検出されない。新しい種別のカードを読み取る場合は、そのカードのシステムコードをここに追加し、`npx expo prebuild --clean` で再ビルドが必要。
+
+### NFC初期化の注意点
+
+- `NfcManager.start()` を呼ばないとNFCセッションが開始されない
+- `requestTechnology` に複数の技術を配列で渡すと、FeliCa以外のNFCカードも検出可能
+- `useCallback` の依存配列に `nfcReady` を含めないと、クロージャ内で初期化状態が古いままになる
+
+```typescript
+// 複数技術を同時にリクエスト
+const techs = [NfcTech.FelicaIOS, NfcTech.MifareIOS, NfcTech.Iso15693IOS, NfcTech.IsoDep];
+const detectedTech = await NfcManager.requestTechnology(techs, {
+  alertMessage: 'カードをiPhone上部にかざしてください',
+});
+```
+
+### FeliCaタグ情報の取得
+
+`getTag()` で取得できるタグオブジェクトのプロパティはカード種別により異なる：
+
+```typescript
+const tag = await NfcManager.getTag();
+
+// FeliCaカードの場合
+const idm = (tag as any).idm;         // "1116020053187C01"
+const systemCode = (tag as any).systemCode;  // "FE00"
+
+// MiFare等の場合
+const id = tag.id;  // カードID
+```
+
 ## 変更ファイル
 
 | ファイル | 変更内容 |
 |---------|---------|
 | `package.json` | `react-native-nfc-manager` 追加 |
-| `app.json` | プラグイン設定追加（NFCパーミッション） |
-| `app/(tabs)/index.tsx` | NFC検出ロジック＋ステータスカードUI |
+| `app.json` | プラグイン設定追加（NFCパーミッション + systemCodes） |
+| `app/(tabs)/index.tsx` | NFC検出ロジック＋ステータスカードUI → NFC画面への遷移ボタン |
+| `app/(tabs)/nfc.tsx` | FeliCaカードリーダー画面（新規） |
+| `app/(tabs)/_layout.tsx` | NFCタブ追加 |
